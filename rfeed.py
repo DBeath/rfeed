@@ -595,7 +595,7 @@ class Item(Host):
 class Feed(Host):
 	def __init__(self, title, link, description, language = None, copyright = None, managingEditor = None, webMaster = None, pubDate = None,
 		lastBuildDate = None, categories = None, generator = None, docs = None, cloud = None, ttl = None, image = None, rating = None,
-		textInput = None, skipHours = None, skipDays = None, items = None, extensions = None):
+		textInput = None, skipHours = None, skipDays = None, items = None, extensions = None, encoding = "UTF-8"):
 		""" Keyword arguments:
 		title -- The name of the channel.
 		link -- The URL to the HTML website corresponding to the channel.
@@ -618,6 +618,7 @@ class Feed(Host):
 		skipDays -- Optional. A hint for aggregators telling them which days they can skip.
 		items -- Optional. The list of items included in this channel.
 		extensions -- Optional. The list of extensions added to the feed.
+		encoding -- Optional. The encoding to use for the XMLGenerator. Defaults to UTF-8.
 		"""
 
 		Host.__init__(self, extensions)
@@ -644,6 +645,7 @@ class Feed(Host):
 		self.textInput = textInput
 		self.skipHours = skipHours
 		self.skipDays = skipDays
+		self.encoding = encoding
 
 		self.categories = [] if categories is None else categories
 
@@ -656,7 +658,7 @@ class Feed(Host):
 
 	def rss(self):
 		output = StringIO()
-		handler = saxutils.XMLGenerator(output, 'UTF-8')
+		handler = saxutils.XMLGenerator(output, self.encoding)
 		handler.startDocument()
 
 		handler.startElement("rss", self._get_attributes())
